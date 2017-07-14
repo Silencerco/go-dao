@@ -40,3 +40,32 @@ func Process(m Manager, f TransactionFunc, args ...interface{}) (interface{}, er
 
 	return v, nil
 }
+
+// TransactionMapFunc definition of a function wrapped in a database transaction context.
+type TransactionMapFunc func(m Manager, ctx *Context, data map[string]interface{}) (interface{}, error)
+
+// ProcessMap wrap database transaction handling around given TransactionMapFunc.
+func ProcessMap(m Manager, f TransactionMapFunc, data []map[string]interface{}) ([]interface{}, error) {
+	ctx, err := m.StartTransaction()
+	if err != nil {
+		return nil, err
+	}
+	defer m.EndTransaction(ctx)
+
+	var views []interface{}
+	for _, val := range data {
+		v, err := f(m, ctx, val)
+		if err != nil {
+			m.RollbackTransaction(ctx)
+			return nil, err
+		}
+		views = append(views, v)
+	}
+
+	if err = m.CommitTransaction(ctx); err != nil {
+		m.RollbackTransaction(ctx)
+		return nil, err
+	}
+
+	return views, nil
+}
