@@ -16,7 +16,7 @@
 package dao_test
 
 import (
-	"github.com/steenzout/go-dao/mock"
+	"github.com/Silencerco/go-dao/mock"
 )
 
 // ManagerSuite test suite for the Manager struct.

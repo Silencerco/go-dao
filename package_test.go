@@ -9,8 +9,8 @@ import (
 	// load PostgreSQL driver
 	_ "github.com/lib/pq"
 
-	"github.com/steenzout/go-dao"
-	"github.com/steenzout/go-dao/mock"
+	"github.com/Silencerco/go-dao"
+	"github.com/Silencerco/go-dao/mock"
 	"github.com/stretchr/testify/suite"
 )
 
