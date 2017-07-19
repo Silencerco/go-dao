@@ -52,14 +52,14 @@ func ProcessMap(m Manager, f TransactionMapFunc, data []map[string]interface{}) 
 	}
 	defer m.EndTransaction(ctx)
 
-	var views []interface{}
+	var models []interface{}
 	for _, val := range data {
 		v, err := f(m, ctx, val)
 		if err != nil {
 			m.RollbackTransaction(ctx)
 			return nil, err
 		}
-		views = append(views, v)
+		models = append(models, v)
 	}
 
 	if err = m.CommitTransaction(ctx); err != nil {
@@ -67,5 +67,5 @@ func ProcessMap(m Manager, f TransactionMapFunc, data []map[string]interface{}) 
 		return nil, err
 	}
 
-	return views, nil
+	return models, nil
 }
